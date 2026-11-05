@@ -21,7 +21,7 @@ export function SubmissionDrawer({ submission, locationId, onClose, onUpdateStat
   if (!submission) return null;
 
   const contactUrl = submission.contactId
-    ? `https://app.gohighlevel.com/v2/location/${locationId}/contacts/detail/${submission.contactId}`
+    ? `https://app.dabr.ai/v2/location/${locationId}/contacts/detail/${submission.contactId}`
     : null;
 
   const dateStr = new Date(submission.submittedAt).toLocaleString('en-US', {

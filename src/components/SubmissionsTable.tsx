@@ -177,7 +177,7 @@ export function SubmissionsTable({
             ) : (
               pageSubmissions.map((sub) => {
                 const contactUrl = sub.contactId
-                  ? `https://app.gohighlevel.com/v2/location/${locationId}/contacts/detail/${sub.contactId}`
+                  ? `https://app.dabr.ai/v2/location/${locationId}/contacts/detail/${sub.contactId}`
                   : null;
 
                 return (
