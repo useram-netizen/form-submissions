@@ -32,7 +32,7 @@ export default function App() {
   const [selectedForm, setSelectedForm] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedService, setSelectedService] = useState('all');
-  const [datePreset, setDatePreset] = useState('last30'); // Default to Last 30 Days (matching previous version)
+  const [datePreset, setDatePreset] = useState('all'); // Default to All Time so all 311 submissions & 136 Free Day are visible immediately
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
 
@@ -350,13 +350,13 @@ export default function App() {
               <select
                 value={datePreset}
                 onChange={(e) => setDatePreset(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all cursor-pointer"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all cursor-pointer font-medium"
               >
-                <option value="last30">Last 30 Days (Default)</option>
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
+                <option value="all">All Time (All 311 Submissions)</option>
+                <option value="last30">Last 30 Days (160 Submissions)</option>
+                <option value="last7">Last 7 Days (44 Submissions)</option>
+                <option value="today">Today (7 Submissions)</option>
                 <option value="yesterday">Yesterday</option>
-                <option value="last7">Last 7 Days</option>
                 <option value="thisMonth">This Month</option>
                 <option value="lastMonth">Last Month</option>
               </select>

@@ -136,14 +136,14 @@ export async function fetchSubmissionsDashboard() {
       console.error('[CRM Error] /customFields failed:', err.message);
       return { customFields: [] };
     }),
-    ghlFetch(`/forms/submissions?locationId=${GHL_LOCATION_ID}&limit=100&page=1`),
+    ghlFetch(`/forms/submissions?locationId=${GHL_LOCATION_ID}&startAt=2020-01-01&limit=100&page=1`),
   ]);
 
   const allSubmissions = [...(subPage1.submissions || [])];
   const totalInCrm = subPage1.meta?.total || allSubmissions.length;
   const totalPagesNeeded = Math.ceil(totalInCrm / 100);
 
-  console.log(`[CRM Submissions] CRM reported total: ${totalInCrm} submissions (${totalPagesNeeded} pages)`);
+  console.log(`[CRM Submissions] CRM reported all-time total: ${totalInCrm} submissions (${totalPagesNeeded} pages)`);
 
   // If there are more pages, fetch ALL remaining pages in parallel
   if (totalPagesNeeded > 1) {
@@ -154,7 +154,7 @@ export async function fetchSubmissionsDashboard() {
     console.log(`[CRM Submissions] Fetching remaining pages in parallel:`, remainingPageNumbers);
     const remainingPages = await Promise.all(
       remainingPageNumbers.map((p) =>
-        ghlFetch(`/forms/submissions?locationId=${GHL_LOCATION_ID}&limit=100&page=${p}`).catch((err) => {
+        ghlFetch(`/forms/submissions?locationId=${GHL_LOCATION_ID}&startAt=2020-01-01&limit=100&page=${p}`).catch((err) => {
           console.error(`[CRM Error] Failed to fetch page ${p}:`, err.message);
           return { submissions: [] };
         })
