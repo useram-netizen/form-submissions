@@ -45,8 +45,87 @@ export function SubmissionsTable({
     });
   }
 
+  const renderPaginationBar = (borderPosition: 'top' | 'bottom') => {
+    if (loading || total === 0) return null;
+    const borderClass =
+      borderPosition === 'top' ? 'border-b border-slate-200' : 'border-t border-slate-200';
+    return (
+      <div
+        className={`px-4 py-3 ${borderClass} bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600`}
+      >
+        <div className="flex items-center gap-3">
+          <div>
+            Showing <span className="font-semibold text-slate-900">{startIndex + 1}</span> to{' '}
+            <span className="font-semibold text-slate-900">
+              {Math.min(startIndex + pageSize, total)}
+            </span>{' '}
+            of <span className="font-semibold text-slate-900">{total}</span> submissions
+          </div>
+
+          <div className="flex items-center gap-1.5 pl-3 border-l border-slate-200">
+            <span className="text-slate-400">Rows per page:</span>
+            <select
+              value={pageSize >= 9999 ? 'all' : pageSize}
+              onChange={(e) => {
+                const val = e.target.value === 'all' ? 9999 : Number(e.target.value);
+                onPageSizeChange(val);
+              }}
+              className="bg-white border border-slate-200 rounded px-2 py-0.5 text-xs text-slate-700 font-medium cursor-pointer"
+            >
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="all">Show All ({total})</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            disabled={page <= 1 || isAll}
+            onClick={() => onPageChange(page - 1)}
+            className="p-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {!isAll &&
+            Array.from({ length: totalPages }).map((_, idx) => {
+              const p = idx + 1;
+              const isCurrent = p === page;
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => onPageChange(p)}
+                  className={`w-7 h-7 rounded text-xs font-medium transition-colors cursor-pointer ${
+                    isCurrent
+                      ? 'bg-blue-600 text-white font-semibold'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  {p}
+                </button>
+              );
+            })}
+
+          <button
+            type="button"
+            disabled={page >= totalPages || isAll}
+            onClick={() => onPageChange(page + 1)}
+            className="p-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+      {renderPaginationBar('top')}
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-sm">
           <thead>
@@ -172,77 +251,8 @@ export function SubmissionsTable({
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      {!loading && total > 0 && (
-        <div className="px-4 py-3.5 border-t border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
-          <div className="flex items-center gap-3">
-            <div>
-              Showing <span className="font-semibold text-slate-900">{startIndex + 1}</span> to{' '}
-              <span className="font-semibold text-slate-900">
-                {Math.min(startIndex + pageSize, total)}
-              </span>{' '}
-              of <span className="font-semibold text-slate-900">{total}</span> submissions
-            </div>
-
-            <div className="flex items-center gap-1.5 pl-3 border-l border-slate-200">
-              <span className="text-slate-400">Rows per page:</span>
-              <select
-                value={pageSize >= 9999 ? 'all' : pageSize}
-                onChange={(e) => {
-                  const val = e.target.value === 'all' ? 9999 : Number(e.target.value);
-                  onPageSizeChange(val);
-                }}
-                className="bg-white border border-slate-200 rounded px-2 py-0.5 text-xs text-slate-700 font-medium cursor-pointer"
-              >
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="all">Show All ({total})</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              disabled={page <= 1 || isAll}
-              onClick={() => onPageChange(page - 1)}
-              className="p-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            {!isAll &&
-              Array.from({ length: totalPages }).map((_, idx) => {
-                const p = idx + 1;
-                const isCurrent = p === page;
-                return (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => onPageChange(p)}
-                    className={`w-7 h-7 rounded text-xs font-medium transition-colors cursor-pointer ${
-                      isCurrent
-                        ? 'bg-blue-600 text-white font-semibold'
-                        : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
-
-            <button
-              type="button"
-              disabled={page >= totalPages || isAll}
-              onClick={() => onPageChange(page + 1)}
-              className="p-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Bottom Pagination Bar */}
+      {renderPaginationBar('bottom')}
     </div>
   );
 }

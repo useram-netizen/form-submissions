@@ -233,9 +233,13 @@ export default function App() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight text-slate-900">Form Submissions</h1>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">
-                Total {filteredSubmissions.length}
-              </span>
+              {data && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">
+                  {filteredSubmissions.length === data.total
+                    ? `Total ${data.total}`
+                    : `Showing ${filteredSubmissions.length} of ${data.total}`}
+                </span>
+              )}
             </div>
             <p className="text-sm text-slate-500 mt-1">Manage and review incoming form submissions</p>
           </div>
@@ -354,10 +358,10 @@ export default function App() {
                 onChange={(e) => setDatePreset(e.target.value)}
                 className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all cursor-pointer font-medium"
               >
-                <option value="all">All Time (All 311 Submissions)</option>
-                <option value="last30">Last 30 Days (160 Submissions)</option>
-                <option value="last7">Last 7 Days (44 Submissions)</option>
-                <option value="today">Today (7 Submissions)</option>
+                <option value="all">All Time</option>
+                <option value="last30">Last 30 Days</option>
+                <option value="last7">Last 7 Days</option>
+                <option value="today">Today</option>
                 <option value="yesterday">Yesterday</option>
                 <option value="thisMonth">This Month</option>
                 <option value="lastMonth">Last Month</option>
