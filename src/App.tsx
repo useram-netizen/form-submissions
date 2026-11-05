@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   Filter,
   Sparkles,
+  X,
+  RotateCcw,
 } from 'lucide-react';
 import { SubmissionsTable } from './components/SubmissionsTable';
 import { SubmissionDrawer } from './components/SubmissionDrawer';
@@ -362,6 +364,114 @@ export default function App() {
               </select>
             </div>
           </div>
+
+          {/* Active Filter Pills & Clear All */}
+          {(search.trim() || selectedForm !== 'all' || selectedStatus !== 'all' || selectedService !== 'all' || datePreset !== 'all') && (
+            <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-slate-400 font-medium flex items-center gap-1 mr-1">
+                <Filter className="w-3 h-3 text-slate-400" /> Active filters:
+              </span>
+
+              {search.trim() && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                  <span>Search: &quot;{search}&quot;</span>
+                  <button
+                    type="button"
+                    onClick={() => setSearch('')}
+                    className="hover:text-blue-900 cursor-pointer p-0.5 rounded-full hover:bg-blue-100"
+                    title="Remove search filter"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              {selectedForm !== 'all' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  <span>Form: {selectedForm}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedForm('all')}
+                    className="hover:text-indigo-900 cursor-pointer p-0.5 rounded-full hover:bg-indigo-100"
+                    title="Remove form filter"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              {selectedStatus !== 'all' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                  <span>Status: {selectedStatus}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStatus('all')}
+                    className="hover:text-amber-900 cursor-pointer p-0.5 rounded-full hover:bg-amber-100"
+                    title="Remove status filter"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              {selectedService !== 'all' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span>Service: {selectedService}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedService('all')}
+                    className="hover:text-emerald-900 cursor-pointer p-0.5 rounded-full hover:bg-emerald-100"
+                    title="Remove service filter"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              {datePreset !== 'all' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                  <span>
+                    Date:{' '}
+                    {datePreset === 'last30'
+                      ? 'Last 30 Days'
+                      : datePreset === 'last7'
+                      ? 'Last 7 Days'
+                      : datePreset === 'today'
+                      ? 'Today'
+                      : datePreset === 'yesterday'
+                      ? 'Yesterday'
+                      : datePreset === 'thisMonth'
+                      ? 'This Month'
+                      : 'Last Month'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setDatePreset('all')}
+                    className="hover:text-purple-900 cursor-pointer p-0.5 rounded-full hover:bg-purple-100"
+                    title="Reset date filter to All Time"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('');
+                  setSelectedForm('all');
+                  setSelectedStatus('all');
+                  setSelectedService('all');
+                  setDatePreset('all');
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 border border-slate-200 cursor-pointer font-medium transition-colors ml-auto sm:ml-2"
+                title="Clear all filters"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Clear all filters</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Table & Pagination */}
