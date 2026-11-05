@@ -93,27 +93,42 @@ const FORM_MAP = [
 ];
 
 const IGNORED_KEYS = new Set([
-  'formId',
+  'formid',
   'location_id',
-  'locationId',
-  'sessionId',
-  'eventData',
-  'Timezone',
-  'fieldsOriSequance',
-  'submissionId',
-  'signatureHash',
+  'locationid',
+  'sessionid',
+  'eventdata',
+  'timezone',
+  'fieldsorisequance',
+  'submissionid',
+  'signaturehash',
   'ip',
   'terms_and_conditions',
-  'parentId',
-  'parentName',
+  'parentid',
+  'parentname',
   'medium',
-  'mediumId',
+  'mediumid',
   'button',
   'header',
   'image',
   'divider',
   'spacer',
   'captcha',
+  // Calendar widget internal metadata
+  'formaction',
+  'calendarname',
+  'calendar_name',
+  'datefielddetails',
+  'date_field_details',
+  'internalsource',
+  'internal_source',
+  'source',
+  'selected_timezone',
+  // Contact basics already displayed at top of Drawer
+  'first_name',
+  'last_name',
+  'email',
+  'phone',
 ]);
 
 export async function fetchSubmissionsDashboard() {
@@ -284,10 +299,23 @@ export async function fetchSubmissionsDashboard() {
     // Extract Fields for Drawer
     const fields = [];
     for (const [k, v] of Object.entries(others)) {
-      if (IGNORED_KEYS.has(k)) continue;
+      if (IGNORED_KEYS.has(k.toLowerCase()) || IGNORED_KEYS.has(k)) continue;
       if (v === null || v === undefined || v === '') continue;
       const label = fieldLabelMap.get(k) || k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-      const val = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      let val = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      if (k.toLowerCase() === 'selected_slot' && typeof v === 'string') {
+        const d = new Date(v);
+        if (!isNaN(d.getTime())) {
+          val = d.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          });
+        }
+      }
       fields.push({ key: k, label, value: val });
     }
 
